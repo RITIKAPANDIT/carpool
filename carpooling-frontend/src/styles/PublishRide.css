@@ -1,0 +1,23 @@
+.publish-container {
+    width: 400px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .publish-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .publish-container button {
+    width: 100%;
+    padding: 10px;
+    background: #1D3D71;
+    color: white;
+    border: none;
+  }
+  

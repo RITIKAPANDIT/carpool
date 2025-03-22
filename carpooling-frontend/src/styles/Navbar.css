@@ -1,0 +1,21 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: #1D3D71;
+    color: white;
+  }
+  
+  .logo {
+    font-size: 20px;
+  }
+  
+  .btn {
+    background: white;
+    color: #1D3D71;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 0 5px;
+  }
+  

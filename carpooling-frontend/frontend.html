@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpooling App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo span {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+        
+        .auth-buttons button {
+            padding: 8px 20px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .login-btn {
+            background-color: white;
+            color: #2196F3;
+            border: 1px solid #2196F3 !important;
+        }
+        
+        .signup-btn, .publish-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .welcome-screen {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .welcome-screen h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .welcome-screen p {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .search-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .search-header {
+            background-color: #2196F3;
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+            text-align: center;
+        }
+        
+        .search-form {
+            padding: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        
+        .input-group:last-child {
+            border-bottom: none;
+        }
+        
+        .input-group label {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .input-group label svg {
+            margin-right: 10px;
+            color: #666;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Login and Register Forms */
+        .auth-form {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-group input[type="file"] {
+            padding: 8px;
+        }
+        
+        .photo-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 10px auto;
+            display: block;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .form-footer a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="https://cdn-icons-png.flaticon.com/512/3097/3097180.png" alt="Car Logo">
+            <span>CarpoolBuddy</span>
+        </div>
+        <div class="auth-buttons" id="auth-buttons">
+            <button class="login-btn" id="nav-login-btn">Login</button>
+            <button class="signup-btn" id="nav-signup-btn">Sign Up</button>
+        </div>
+        <div class="user-buttons hidden" id="user-buttons">
+            <button class="publish-btn" id="publish-ride-btn">Publish Ride</button>
+            <button class="logout-btn" id="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <!-- Welcome Screen (Not Logged In) -->
+    <div class="welcome-screen" id="welcome-screen">
+        <h1>Welcome to CarpoolBuddy</h1>
+        <p>Let's have fun and book a ride!</p>
+    </div>
+
+    <!-- Ride Search Box (Logged In) -->
+    <div class="search-box hidden" id="ride-search">
+        <div class="search-header">
+            Your pick of rides at low prices
+        </div>
+        <div class="search-form">
+            <div class="input-group">
+                <label>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="8" stroke="#666666" stroke-width="2"/>
+                    </svg>
+                    Leaving from
+                </label>
+                <input type="text" id="leaving-from" placeholder="Enter departure location">
+            </div>
+            <div class="input-group">
+                <label>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="8" stroke="#666666" stroke-width="2"/>
+                    </svg>
+                    Going to
+                </label>
+                <input type="text" id="going-to" placeholder="Enter destination">
+            </div>
+            <div class="input-group">
+                <label>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="5" width="16" height="14" rx="2" stroke="#666666" stroke-width="2"/>
+                        <path d="M4 9H20" stroke="#666666" stroke-width="2"/>
+                        <path d="M8 13H10" stroke="#666666" stroke-width="2"/>
+                        <path d="M14 13H16" stroke="#666666" stroke-width="2"/>
+                        <path d="M8 17H10" stroke="#666666" stroke-width="2"/>
+                        <path d="M14 17H16" stroke="#666666" stroke-width="2"/>
+                    </svg>
+                    Today
+                </label>
+                <input type="date" id="travel-date">
+            </div>
+            <div class="input-group">
+                <label>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="7" r="4" stroke="#666666" stroke-width="2"/>
+                        <path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21" stroke="#666666" stroke-width="2"/>
+                    </svg>
+                    1 passenger
+                </label>
+                <input type="number" id="passengers" min="1" value="1">
+            </div>
+            <button class="search-button" id="search-button">Search</button>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="auth-form hidden" id="login-form">
+        <h2>Login to CarpoolBuddy</h2>
+        <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required>
+        </div>
+        <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required>
+        </div>
+        <button class="submit-btn" id="login-submit">Login</button>
+        <div class="form-footer">
+            <p>Don't have an account? <a href="#" id="switch-to-signup">Sign up</a></p>
+        </div>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="auth-form hidden" id="signup-form">
+        <h2>Create a CarpoolBuddy Account</h2>
+        <div class="form-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-phone">Phone Number</label>
+            <input type="tel" id="signup-phone" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-confirm">Confirm Password</label>
+            <input type="password" id="signup-confirm" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-photo">Profile Photo</label>
+            <input type="file" id="signup-photo" accept="image/*" required>
+            <img id="photo-preview" class="photo-preview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile Photo Preview">
+        </div>
+        <button class="submit-btn" id="signup-submit">Sign Up</button>
+        <div class="form-footer">
+            <p>Already have an account? <a href="#" id="switch-to-login">Login</a></p>
+        </div>
+    </div>
+
+    <!-- Publish Ride Form -->
+    <div class="auth-form hidden" id="publish-form">
+        <h2>Publish a New Ride</h2>
+        <div class="form-group">
+            <label for="pub-from">Departure Location</label>
+            <input type="text" id="pub-from" required>
+        </div>
+        <div class="form-group">
+            <label for="pub-to">Destination</label>
+            <input type="text" id="pub-to" required>
+        </div>
+        <div class="form-group">
+            <label for="pub-date">Date</label>
+            <input type="date" id="pub-date" required>
+        </div>
+        <div class="form-group">
+            <label for="pub-time">Time</label>
+            <input type="time" id="pub-time" required>
+        </div>
+        <div class="form-group">
+            <label for="pub-seats">Available Seats</label>
+            <input type="number" id="pub-seats" min="1" value="1" required>
+        </div>
+        <div class="form-group">
+            <label for="pub-price">Price per Seat ($)</label>
+            <input type="number" id="pub-price" min="0" step="0.01" required>
+        </div>
+        <button class="submit-btn" id="publish-submit">Publish Ride</button>
+    </div>
+
+    <script>
+        // DOM Elements
+        const navLoginBtn = document.getElementById('nav-login-btn');
+        const navSignupBtn = document.getElementById('nav-signup-btn');
+        const publishRideBtn = document.getElementById('publish-ride-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const authButtons = document.getElementById('auth-buttons');
+        const userButtons = document.getElementById('user-buttons');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const rideSearch = document.getElementById('ride-search');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const publishForm = document.getElementById('publish-form');
+        const switchToSignup = document.getElementById('switch-to-signup');
+        const switchToLogin = document.getElementById('switch-to-login');
+        const loginSubmit = document.getElementById('login-submit');
+        const signupSubmit = document.getElementById('signup-submit');
+        const publishSubmit = document.getElementById('publish-submit');
+        const searchButton = document.getElementById('search-button');
+        const photoInput = document.getElementById('signup-photo');
+        const photoPreview = document.getElementById('photo-preview');
+
+        // Base URL for API
+        const apiBaseUrl = 'http://localhost:4000/api'; // Change this to match your backend URL
+
+        // Photo preview functionality
+        photoInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Check if user is logged in
+        function checkLoginStatus() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                // User is logged in
+                authButtons.classList.add('hidden');
+                userButtons.classList.remove('hidden');
+                welcomeScreen.classList.add('hidden');
+                rideSearch.classList.remove('hidden');
+            } else {
+                // User is not logged in
+                authButtons.classList.remove('hidden');
+                userButtons.classList.add('hidden');
+                welcomeScreen.classList.remove('hidden');
+                rideSearch.classList.add('hidden');
+            }
+        }
+
+        // Show login form
+        function showLoginForm() {
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            publishForm.classList.add('hidden');
+            welcomeScreen.classList.add('hidden');
+            rideSearch.classList.add('hidden');
+        }
+
+        // Show signup form
+        function showSignupForm() {
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            publishForm.classList.add('hidden');
+            welcomeScreen.classList.add('hidden');
+            rideSearch.classList.add('hidden');
+        }
+
+        // Show publish ride form
+        function showPublishForm() {
+            publishForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            signupForm.classList.add('hidden');
+            welcomeScreen.classList.add('hidden');
+            rideSearch.classList.add('hidden');
+        }
+
+        // Back to home screen
+        function goToHome() {
+            publishForm.classList.add('hidden');
+            loginForm.classList.add('hidden');
+            signupForm.classList.add('hidden');
+            checkLoginStatus();
+        }
+
+        // Login function
+        async function login(email, password) {
+            try {
+                const response = await fetch(`http://localhost:4000/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Save token to local storage
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    // Redirect to home
+                    goToHome();
+                    alert('Login successful!');
+                } else {
+                    alert(data.message || 'Login failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Something went wrong. Please try again later.');
+            }
+        }
+
+        // Signup function
+        async function signup(formData) {
+            try {
+                const response = await fetch(`http://localhost:4000/api/auth/register`, {
+                    method: 'POST',
+                    body: formData  // Using FormData for file upload
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Show login form after successful signup
+                    showLoginForm();
+                    alert('Registration successful! Please login.');
+                } else {
+                    alert(data.message || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                alert('Something went wrong. Please try again later.');
+            }
+        }
+
+        // Publish ride function
+        async function publishRide(rideData) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You must be logged in to publish a ride.');
+                showLoginForm();
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${apiBaseUrl}/rides`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(rideData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    goToHome();
+                    alert('Ride published successfully!');
+                } else {
+                    alert(data.message || 'Failed to publish ride. Please try again.');
+                }
+            } catch (error) {
+                console.error('Publish ride error:', error);
+                alert('Something went wrong. Please try again later.');
+            }
+        }
+
+        // Search rides function
+        async function searchRides(searchData) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You must be logged in to search for rides.');
+                showLoginForm();
+                return;
+            }
+            
+            try {
+                const queryParams = new URLSearchParams({
+                    fromLocation: searchData.fromLocation,
+                    toLocation: searchData.toLocation,
+                    date: searchData.date,
+                    seats: searchData.passengers
+                });
+                
+                const response = await fetch(`http://localhost:4000/api/rides/search/:id`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Here you would display the search results
+                    console.log('Rides found:', data);
+                    alert(`${data.length} rides found!`);
+                } else {
+                    alert(data.message || 'Failed to search rides. Please try again.');
+                }
+            } catch (error) {
+                console.error('Search rides error:', error);
+                alert('Something went wrong. Please try again later.');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            goToHome();
+        }
+
+        // Event Listeners
+        navLoginBtn.addEventListener('click', showLoginForm);
+        navSignupBtn.addEventListener('click', showSignupForm);
+        publishRideBtn.addEventListener('click', showPublishForm);
+        logoutBtn.addEventListener('click', logout);
+        switchToSignup.addEventListener('click', showSignupForm);
+        switchToLogin.addEventListener('click', showLoginForm);
+
+        loginSubmit.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            login(email, password);
+        });
+
+        signupSubmit.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('signup-name').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const phone = document.getElementById('signup-phone').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+            const photoFile = document.getElementById('signup-photo').files[0];
+            
+            // Validate all fields are filled
+            if (!name) {
+                alert('Please enter your full name.');
+                return;
+            }
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+            if (!phone) {
+                alert('Please enter your phone number.');
+                return;
+            }
+            if (!password) {
+                alert('Please enter a password.');
+                return;
+            }
+            if (!confirm) {
+                alert('Please confirm your password.');
+                return;
+            }
+            if (!photoFile) {
+                alert('Please upload a profile photo.');
+                return;
+            }
+            
+            // Validate passwords match
+            if (password !== confirm) {
+                alert('Passwords do not match.');
+                return;
+            }
+            
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('password', password);
+            formData.append('photo', photoFile);
+            
+            signup(formData);
+        });
+
+        publishSubmit.addEventListener('click', (e) => {
+            e.preventDefault();
+            const fromLocation = document.getElementById('pub-from').value;
+            const toLocation = document.getElementById('pub-to').value;
+            const date = document.getElementById('pub-date').value;
+            const time = document.getElementById('pub-time').value;
+            const availableSeats = document.getElementById('pub-seats').value;
+            const pricePerSeat = document.getElementById('pub-price').value;
+            
+            if (!fromLocation || !toLocation || !date || !time || !availableSeats || !pricePerSeat) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            const rideData = {
+                fromLocation,
+                toLocation,
+                departureDate: `${date}T${time}`,
+                availableSeats: parseInt(availableSeats),
+                pricePerSeat: parseFloat(pricePerSeat)
+            };
+            
+            publishRide(rideData);
+        });
+
+        searchButton.addEventListener('click', () => {
+            const fromLocation = document.getElementById('leaving-from').value;
+            const toLocation = document.getElementById('going-to').value;
+            const date = document.getElementById('travel-date').value;
+            const passengers = document.getElementById('passengers').value;
+            
+            if (!fromLocation || !toLocation) {
+                alert('Please enter departure and destination locations.');
+                return;
+            }
+            
+            const searchData = {
+                fromLocation,
+                toLocation,
+                date: date || new Date().toISOString().split('T')[0],
+                passengers: passengers || 1
+            };
+            
+            searchRides(searchData);
+        });
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html>

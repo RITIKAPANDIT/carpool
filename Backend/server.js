@@ -31,7 +31,12 @@ app.use(cors());
 
 // Connect to Database
 connectDB();
-
+app.get("/", (req, res) => {
+  res.send({
+    activeStatus: true,
+    error:false,
+  })
+});
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/rides", require("./routes/rides"));

@@ -7,10 +7,31 @@ exports.register = async (req, res) => {
       const { fullName, email, password, phoneNumber } = req.body;
       const profilePhoto = req.file ? `/uploads/${req.file.filename}` : "default.jpg"; // Use uploaded photo or default
   
+      // Check if user already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+
+      // Create and save new user
       const user = new User({ fullName, email, password, phoneNumber, profilePhoto });
       await user.save();
+
+      // Generate token
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
   
-      res.status(201).json({ message: "User registered successfully", user });
+      // Return success with token
+      res.status(201).json({
+        message: "User registered successfully",
+        token,
+        user: {
+          id: user._id,
+          fullName: user.fullName,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          profilePhoto: user.profilePhoto
+        }
+      });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

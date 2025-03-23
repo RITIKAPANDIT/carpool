@@ -1,9 +1,10 @@
-const express = require("express");
-const { sendSOS } = require("../controllers/sosController");
-const authMiddleware = require("../middleware/auth");
+const express = require('express');
+const { sendEmergencyAlert } = require('../controllers/sosController');
+const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post("/", authMiddleware, sendSOS); // Send SOS alert
+// Protected route - only authenticated users can send emergency alerts
+router.post('/emergency', authMiddleware, sendEmergencyAlert);
 
 module.exports = router;

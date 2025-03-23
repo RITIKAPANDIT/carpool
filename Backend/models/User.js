@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
     isProfileBlurred: { type: Boolean, default: true },
     ridesPublished: [{ type: mongoose.Schema.Types.ObjectId, ref: "Ride" }], // Rides user created
     ridesJoined: [{ type: mongoose.Schema.Types.ObjectId, ref: "Ride" }],
+    rideRequests: [{
+      ride: { type: mongoose.Schema.Types.ObjectId, ref: "Ride" },
+      status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' }
+    }],
 });
 
 // Hash password before saving

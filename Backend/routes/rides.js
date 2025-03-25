@@ -26,12 +26,11 @@ const express = require("express");
 const {
   createRide,
   joinRide,
-  getAvailableRides,
   getUserRides,
   acceptRideRequest,
   rejectRideRequest,
   matchRides,
-  searchRides // Add searchRides
+  searchRides
 } = require("../controllers/rideController");
 
 const authMiddleware = require("../middleware/auth");
@@ -44,7 +43,6 @@ router.post("/match", authMiddleware, matchRides); // Intelligent ride matching
 router.post("/join/:rideId", authMiddleware, joinRide);  // Join a ride
 router.post("/accept/:rideId", authMiddleware, acceptRideRequest); // Accept request
 router.post("/reject/:rideId", authMiddleware, rejectRideRequest); // Reject request
-router.get("/", getAvailableRides);               // Get all rides (deprecated)
 router.get("/search", authMiddleware, searchRides); // Search rides with location matching
 router.get("/myrides", authMiddleware, getUserRides);  // Get user rides
 

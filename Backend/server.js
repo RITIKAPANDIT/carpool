@@ -27,7 +27,8 @@ io.on("connection", (socket) => {
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
+app.use(cors())
 
 // Connect to Database
 connectDB();

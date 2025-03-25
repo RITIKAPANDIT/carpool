@@ -296,3 +296,43 @@ exports.searchRides = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.matchRides = async (req, res) => {
+  try {
+    const { origin, destination, date, seats } = req.body;
+    
+    // Find open rides with available seats
+    let rides = await Ride.find({
+      status: "open",
+      availableSeats: { $gte: seats || 1 }
+    }).populate("creator", "fullName email gender");
+
+    // Calculate route match score for each ride
+    const matchedRides = rides.map(ride => {
+      const score = calculateRouteMatch(
+        origin,
+        destination,
+        ride.pickupLocation,
+        ride.dropLocation,
+        new Date(date),
+        new Date(ride.departureTime),
+        seats,
+        ride.availableSeats
+      );
+
+      return {
+        ...ride.toObject(),
+        matchScore: score
+      };
+    });
+
+    // Sort by match score and filter low matches
+    const filteredRides = matchedRides
+      .filter(ride => ride.matchScore >= 30)
+      .sort((a, b) => b.matchScore - a.matchScore);
+
+    res.status(200).json({ rides: filteredRides });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

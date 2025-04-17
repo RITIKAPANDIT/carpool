@@ -197,6 +197,10 @@ const SearchRide = () => {
                         <span className="info-label">Seats</span>
                         <span className="info-value">{ride.availableSeats}</span>
                       </div>
+                      <div className="info-item">
+                        <span className="info-label">Price</span>
+                        <span className="info-value">₹{ride.pricePerSeat}</span>
+                      </div>
                     </div>
                   </div>
 
